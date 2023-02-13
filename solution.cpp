@@ -16,6 +16,7 @@ using Graph = vector<vector<int>>;
 
 constexpr long long INF = 1LL << 62;
 constexpr int INT_INF = 1 << 30;
+constexpr double epsilon = 1e-9;
 
 int dx[4] = {1, 0, -1, 0}, dy[4] = {0, 1, 0, -1}; // 右、下、左、上
 // int dx[8] = {-1, -1, -1, 0, 0, 1, 1, 1}, dy[8] = {-1, 0, 1, 1, -1, 1, 0, -1};
