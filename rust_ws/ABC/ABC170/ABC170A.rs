@@ -2,16 +2,24 @@ use proconio::input;
 
 fn main() {
     proconio::input! {
-        x: i32,
-        y: i32,
+        x1: i32,
+        x2: i32,
+        x3: i32,
+        x4: i32,
+        x5: i32,
     }
 
-    let a = y - 2 * x;
-    let b = 4 * x - y;
-
-    if a % 2 == 0 && b % 2 == 0 && y >= 2 * x && 4 * x >= y {
-        println!("Yes");
+    let ans = if x1 == 0 {
+        1
+    } else if x2 == 0 {
+        2
+    } else if x3 == 0 {
+        3
+    } else if x4 == 0 {
+        4
     } else {
-        println!("No");
-    }
+        5
+    };
+
+    println!("{}", ans);
 }
