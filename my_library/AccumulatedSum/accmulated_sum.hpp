@@ -1,3 +1,6 @@
+#ifndef ACCUMULATED_SUM_HPP_
+#define ACCUMULATED_SUM_HPP_
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -13,3 +16,5 @@ public:
 
   vector<T> sum;
 };
+
+#endif // ACCUMULATED_SUM_HPP_

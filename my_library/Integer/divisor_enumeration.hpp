@@ -1,3 +1,6 @@
+#ifndef INTEGER_DIVISOR_ENUMERATION_HPP_
+#define INTEGER_DIVISOR_ENUMERATION_HPP_
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -13,3 +16,5 @@ template <typename T> vector<T> divisor(T n) {
   sort(ret.begin(), ret.end()); // 昇順に並べる
   return ret;
 }
+
+#endif // INTEGER_DIVISOR_ENUMERATION_HPP_
