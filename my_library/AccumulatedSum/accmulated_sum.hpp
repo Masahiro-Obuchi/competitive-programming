@@ -40,6 +40,11 @@ public:
     int row_size = data.size();
     int col_size = data[0].size();
 
+    if (row_size == 0 || col_size == 0) {
+      sum.resize(1, vector<T>(1, T{})); // 空の配列の場合、1x1の累積和を初期化
+      return;
+    }
+
     sum.resize(row_size + 1, vector<T>(col_size + 1, T{}));
     for (int i = 0; i < row_size; ++i) {
       for (int j = 0; j < col_size; ++j) {
@@ -78,30 +83,38 @@ private:
 
 template <typename T> struct Imos {
 public:
-  Imos(size_t size) : imos(size + 1, 0), built(false) {}
+  Imos(size_t size) : imos(size + 1, T{}), built(false) {}
 
   void add(int left, int right, T value) {
-    if (left < 0 || right < 0 || left >= static_cast<int>(imos.size()) - 1) {
+    if (built) {
+      throw runtime_error("Cannot add after build() has been called");
+    }
+
+    if (left < 0 || right < 0 || left >= right || left >= static_cast<int>(imos.size()) - 1 ||
+        right > static_cast<int>(imos.size()) - 1) {
       return; // 範囲外は無視
     }
     imos[left] += value;
     if (right < static_cast<int>(imos.size()) - 1) {
       imos[right] -= value;
     }
-    built = false; // 再構築が必要
   }
 
   vector<T> build() {
-    if (!built) {
-      // 累積和を計算
-      for (size_t i = 0; i < imos.size() - 1; i++) {
-        imos[i + 1] += imos[i];
-      }
-      built = true;
+    if (built) {
+      throw runtime_error("build() can only be called once");
     }
+    // 累積和を計算
+    for (size_t i = 0; i < imos.size() - 1; i++) {
+      imos[i + 1] += imos[i];
+    }
+    built = true;
+
     // 番兵を除いて返す
     return vector<T>(imos.begin(), imos.end() - 1);
   }
+
+  size_t size() const { return imos.size() - 1; }
 
 private:
   vector<T> imos;
@@ -110,36 +123,50 @@ private:
 
 template <typename T> struct Imos2D {
 public:
-  Imos2D(size_t rows, size_t cols) : imos(rows + 1, vector<T>(cols + 1, 0)), built(false) {}
+  Imos2D(size_t rows, size_t cols) : imos(rows + 1, vector<T>(cols + 1, T{})), built(false) {}
 
   void add(int r1, int c1, int r2, int c2, T value) {
+    if (built) {
+      throw runtime_error("Cannot add after build() has been called");
+    }
     if (r1 < 0 || c1 < 0 || r2 <= r1 || c2 <= c1 || r2 >= static_cast<int>(imos.size()) ||
         c2 >= static_cast<int>(imos[0].size())) {
-      return; // 範囲外は無視
+      return;
     }
+
     imos[r1][c1] += value;
     imos[r1][c2] -= value;
     imos[r2][c1] -= value;
     imos[r2][c2] += value;
-    built = false; // 再構築が必要
   }
 
   vector<vector<T>> build() {
-    if (!built) {
-      for (size_t i = 0; i < imos.size() - 1; i++) {
-        for (size_t j = 0; j < imos[0].size() - 1; j++) {
-          if (i > 0)
-            imos[i][j] += imos[i - 1][j];
-          if (j > 0)
-            imos[i][j] += imos[i][j - 1];
-          if (i > 0 && j > 0)
-            imos[i][j] -= imos[i - 1][j - 1];
-        }
-      }
-      built = true;
+    if (built) {
+      throw runtime_error("build() can only be called once");
     }
-    return vector<vector<T>>(imos.begin(), imos.end() - 1);
+    for (size_t i = 0; i < imos.size(); i++) {
+      for (size_t j = 1; j < imos[0].size(); j++) {
+        imos[i][j] += imos[i][j - 1];
+      }
+    }
+    for (size_t i = 1; i < imos.size(); i++) {
+      for (size_t j = 0; j < imos[0].size(); j++) {
+        imos[i][j] += imos[i - 1][j];
+      }
+    }
+    built = true;
+
+    // 番兵を除いて返す（各行と各列から最後の要素を除く）
+    vector<vector<T>> result(imos.size() - 1);
+    for (size_t i = 0; i < imos.size() - 1; i++) {
+      result[i] = vector<T>(imos[i].begin(), imos[i].end() - 1);
+    }
+    return result;
   }
+
+  // サイズ取得メソッドを追加
+  size_t rows() const { return imos.size() - 1; }
+  size_t cols() const { return imos.empty() ? 0 : imos[0].size() - 1; }
 
 private:
   vector<vector<T>> imos;
