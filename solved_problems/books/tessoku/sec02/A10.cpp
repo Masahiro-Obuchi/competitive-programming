@@ -16,6 +16,7 @@ using Graph = vector<vector<int>>;
 
 constexpr long long INF = 1LL << 62;
 constexpr int INT_INF = 1 << 30;
+constexpr double epsilon = 1e-9;
 
 int dx[4] = {1, 0, -1, 0}, dy[4] = {0, 1, 0, -1}; // 右、下、左、上
 // int dx[8] = {-1, -1, -1, 0, 0, 1, 1, 1}, dy[8] = {-1, 0, 1, 1, -1, 1, 0, -1};
@@ -26,16 +27,16 @@ int main() {
   int N;
   cin >> N;
   vector<int> A(N);
-  for (auto &it : A)
+  for (auto &it : A) {
     cin >> it;
-
-  vector<int> leftMax(N + 1), rightMax(N + 1);
-  for (int i = 0; i < N; i++) {
-    leftMax[i + 1] = max(leftMax[i], A[i]);
   }
 
-  for (int i = N; i > 0; i--) {
-    rightMax[i - 1] = max(rightMax[i], A[i]);
+  vector<int> left_max(N + 1), right_max(N + 1);
+  for (int i = 0; i < N; i++) {
+    left_max[i + 1] = max(left_max[i], A[i]);
+  }
+  for (int i = N - 1; i >= 0; i--) {
+    right_max[i] = max(right_max[i + 1], A[i]);
   }
 
   int D;
@@ -43,8 +44,10 @@ int main() {
   for (int i = 0; i < D; i++) {
     int L, R;
     cin >> L >> R;
-    L--, R--;
-    cout << max(leftMax[L], rightMax[R]) << endl;
+    L--;
+    auto ans = max(left_max[L], right_max[R]);
+    cout << ans << endl;
   }
+
   return 0;
 }
