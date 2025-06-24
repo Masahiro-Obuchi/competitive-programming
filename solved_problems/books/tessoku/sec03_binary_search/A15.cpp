@@ -21,21 +21,28 @@ constexpr double epsilon = 1e-9;
 int dx[4] = {1, 0, -1, 0}, dy[4] = {0, 1, 0, -1}; // 右、下、左、上
 // int dx[8] = {-1, -1, -1, 0, 0, 1, 1, 1}, dy[8] = {-1, 0, 1, 1, -1, 1, 0, -1};
 
-bool check(double x, double N) { return x * x * x + x >= N; }
-
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
   int N;
   cin >> N;
-  double left = 0.0, right = 100000.0;
-  while (right - left > epsilon) {
-    double mid = (left + right) / 2.;
-    if (check(mid, static_cast<double>(N)))
-      right = mid;
-    else
-      left = mid;
+  vector<ll> A(N);
+  for (auto &it : A) {
+    cin >> it;
   }
-  cout << setprecision(12) << right << endl;
+
+  vector<ll> sorted_A = A;
+  sort(sorted_A.begin(), sorted_A.end());
+  sorted_A.erase(unique(sorted_A.begin(), sorted_A.end()), sorted_A.end());
+
+  vector<int> B(N);
+  for (int i = 0; i < N; i++) {
+    int idx = lower_bound(sorted_A.begin(), sorted_A.end(), A[i]) - sorted_A.begin();
+    B[i] = idx + 1;
+  }
+
+  for (int i = 0; i < N; i++) {
+    cout << B[i] << " ";
+  }
   return 0;
 }

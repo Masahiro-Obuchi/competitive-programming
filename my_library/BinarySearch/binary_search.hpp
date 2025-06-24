@@ -4,10 +4,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-template <typename T, typename F> T binary_search(T ok, T ng, F predicate) {
+template <typename T, typename F> T bisect(T ok, T ng, F predicate) {
   // 初期条件チェック
-  assert(predicate(ok));
-  assert(!predicate(ng));
+  if (!predicate(ok)) {
+    return ok;
+  }
 
   while (abs(ng - ok) > 1) { // okとngの差が1未満になるまで繰り返す
     T mid = std::midpoint(ok, ng);
@@ -21,4 +22,4 @@ template <typename T, typename F> T binary_search(T ok, T ng, F predicate) {
   return ok;
 }
 
-#endif // BINARY_SEARCH_HPP_
+#endif
