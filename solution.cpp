@@ -24,5 +24,6 @@ int dx[4] = {1, 0, -1, 0}, dy[4] = {0, 1, 0, -1}; // 右、下、左、上
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
+
   return 0;
 }
